@@ -16,6 +16,28 @@ class Matter1Iterator(Iterator):
             return res
         raise StopIteration
     
+class Matter2Iterator(Iterator):
+    def __init__(self, students):
+        self.students = sorted(students, key=lambda s: s.matter_2, reverse=True)
+        self.index = 0
+    def __next__(self):
+        if self.index < len(self.students):
+            res = self.students[self.index]
+            self.index += 1
+            return res
+        raise StopIteration
+
+class Matter3Iterator(Iterator):
+    def __init__(self, students):
+        self.students = sorted(students, key=lambda s: s.matter_3, reverse=True)
+        self.index = 0
+    def __next__(self):
+        if self.index < len(self.students):
+            res = self.students[self.index]
+            self.index += 1
+            return res
+        raise StopIteration
+    
 class SchoolClass(Iterable):
      def __init__(self):
          self.students = []
@@ -51,3 +73,7 @@ if __name__ == '__main__':
 
     for s in school_class:
         print(f"{s.name}: {s.matter_1}")
+    for s in Matter2Iterator(school_class.students):
+        print(f"{s.name}: {s.matter_2}")
+    for s in Matter3Iterator(school_class.students):
+        print(f"{s.name}: {s.matter_3}")
