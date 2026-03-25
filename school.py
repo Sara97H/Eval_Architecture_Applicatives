@@ -1,4 +1,13 @@
 from collections.abc import Iterable, Iterator
+
+def add_matter_4(cls):
+    original_init = cls.__init__
+    def new_init(self, name, matter_1, matter_2, matter_3, matter_4=0):
+        original_init(self, name, matter_1, matter_2, matter_3)
+        self.matter_4 = matter_4
+    cls.__init__ = new_init
+    return cls
+@add_matter_4
 class Student:
     def __init__(self, name, matter_1, matter_2, matter_3):
         self.name = name
