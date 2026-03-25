@@ -1,5 +1,14 @@
 from collections.abc import Iterable, Iterator
 
+def singleton(cls):
+    instances = {}
+    def get_instance(*args, **kwargs):
+        if cls not in instances:
+            instances[cls] = cls(*args, **kwargs)
+        return instances[cls]
+    return get_instance
+
+
 def add_matter_4(cls):
     original_init = cls.__init__
     def new_init(self, name, matter_1, matter_2, matter_3, matter_4=0):
@@ -8,11 +17,13 @@ def add_matter_4(cls):
     cls.__init__ = new_init
     return cls
 
+
 def add_matter_4_iterator(cls):
     def get_matter_4_iter(self):
         return Matter4Iterator(self.students)
     cls.get_matter_4_iter = get_matter_4_iter
     return cls
+
 
 @add_matter_4
 class Student:
@@ -65,6 +76,7 @@ class Matter4Iterator(Iterator):
             return res
         raise StopIteration
 
+@singleton
 @add_matter_4_iterator
 class SchoolClass(Iterable):
      def __init__(self):
@@ -94,11 +106,12 @@ if __name__ == '__main__':
     school_class.add_student(Student('J', 10, 12, 13,15))
     school_class.add_student(Student('A', 8, 2, 17,10))
     school_class.add_student(Student('V', 9, 14, 14, 12))
-
+    school_class_2 = SchoolClass() # On essaie d'en créer une deuxième pour le résultat finale
+    
     # school_class.rank_matter_1()
     # school_class.rank_matter_2()
     # school_class.rank_matter_3()*
-    
+
     for s in school_class:
         print(f"{s.name}: {s.matter_1}")
     for s in Matter2Iterator(school_class.students):
@@ -110,3 +123,8 @@ if __name__ == '__main__':
         print(f"{s.name}: {s.matter_4}")
     for s in school_class.get_matter_4_iter():
         print(f"{s.name}: {s.matter_4}")
+
+    if school_class is school_class_2:
+        print("Succès : school_class et school_class_2 sont la même instance (Singleton).")
+    else:
+        print("Erreur : Ce sont deux instances différentes.")
